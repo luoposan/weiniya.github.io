@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>维尼亚技师风采 | 私域专享</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f3f0;
+            padding: 20px 16px 40px;
+            color: #2c2418;
+        }
+
+        /* 头部 */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .header h1 {
+            font-size: 1.9rem;
+            color: #b57c1c;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+        .header p {
+            font-size: 0.85rem;
+            color: #7f6b58;
+            margin-top: 6px;
+        }
+
+        /* 项目选项卡 */
+        .project-tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .project-btn {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #5c4b34;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 0 0 auto;
+        }
+        .project-btn.active {
+            background: #b57c1c;
+            color: white;
+            box-shadow: 0 6px 12px rgba(181,124,28,0.25);
+        }
+
+        /* 套餐区域 */
+        .package-area {
+            background: #fff9f2;
+            border-radius: 32px;
+            padding: 16px 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .package-title {
+            font-size: 0.85rem;
+            color: #b57c1c;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-left: 8px;
+            font-weight: 500;
+        }
+        .package-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .package-btn {
+            background: #f0e9df;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #4f3b28;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+            min-width: 130px;
+        }
+        .package-btn.active {
+            background: #d9b48b;
+            color: #2c1c0c;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .package-price {
+            font-size: 0.75rem;
+            font-weight: normal;
+            margin-left: 6px;
+            color: #b57c1c;
+        }
+
+        /* 技师列表 */
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 8px;
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 28px rgba(0,0,0,0.1);
+        }
+        .card-img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            background: #e7dfd5;
+        }
+        .card-info {
+            padding: 16px;
+        }
+        .staff-id {
+            display: inline-block;
+            background: #f3ede5;
+            color: #b57c1c;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 30px;
+            margin-bottom: 10px;
+        }
+        .staff-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #2c2418;
+        }
+        .staff-desc {
+            font-size: 0.85rem;
+            color: #7a6854;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+        .btn-gallery {
+            background: none;
+            border: 1px solid #d9b48b;
+            color: #b57c1c;
+            padding: 8px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .btn-gallery:hover {
+            background: #b57c1c;
+            color: white;
+            border-color: #b57c1c;
+        }
+        .toast-msg {
+            text-align: center;
+            margin-top: 32px;
+            color: #aa9a86;
+            font-size: 0.8rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 36px;
+            font-size: 0.7rem;
+            color: #b9aa97;
+        }
+
+        /* 相册弹窗 */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.92);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 70%;
+            border-radius: 20px;
+            object-fit: contain;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+        }
+        .close-lightbox {
+            position: absolute;
+            top: 24px;
+            right: 30px;
+            color: white;
+            font-size: 2.2rem;
+            cursor: pointer;
+            font-weight: 300;
+            background: rgba(0,0,0,0.5);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox-nav {
+            display: flex;
+            gap: 32px;
+            margin-top: 24px;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            padding: 6px 22px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .nav-btn:active {
+            background: rgba(255,255,255,0.4);
+        }
+        .lightbox-caption {
+            color: #ddd;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            background: rgba(0,0,0,0.5);
+            padding: 6px 16px;
+            border-radius: 40px;
+        }
+
+        @media (max-width: 500px) {
+            .package-buttons {
+                flex-direction: column;
+            }
+            .package-btn {
+                text-align: center;
+            }
+            .project-btn {
+                padding: 8px 18px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>🎵 维尼亚 · 私域专享</h1>
+    <p>选项目 → 选类型 → 看技师 | 找客服订房优先安排</p>
+</div>
+
+<!-- 三大项目 -->
+<div class="project-tabs" id="projectTabs">
+    <button class="project-btn" data-project="kge">🎤 K歌沐足</button>
+    <button class="project-btn" data-project="spa">💆 按摩SPA</button>
+    <button class="project-btn" data-project="ys">🌸 养生沐足</button>
+</div>
+
+<!-- 套餐区域 -->
+<div class="package-area">
+    <div class="package-title">✨ 选择项目（点击查看技师）</div>
+    <div class="package-buttons" id="packageButtons"></div>
+</div>
+
+<!-- 技师列表 -->
+<div id="staffGrid" class="staff-grid"></div>
+<div class="toast-msg">👇 点击「相册」查看更多明细，到店找客服订房即享优先服务</div>
+<footer>维尼亚休闲会所 · 暖心服务 用心服务</footer>
+
+<!-- 相册弹窗 -->
+<div id="lightbox" class="lightbox">
+    <span class="close-lightbox">×</span>
+    <img id="lightboxImg" src="" alt="技师相册">
+    <div class="lightbox-nav">
+        <button class="nav-btn" id="prevBtn">‹</button>
+        <button class="nav-btn" id="nextBtn">›</button>
+    </div>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<script>
+    // ------------------------------
+    // 1. 定义套餐数据（项目 → 套餐列表）
+    // ------------------------------
+    const packages = {
+        kge: [   // K歌沐足
+            { name: "貂蝉拜月", price: "178元", code: "diaochan" },
+            { name: "贵妃醉酒", price: "198元", code: "guifei" }
+        ],
+        spa: [   // 按摩SPA
+            { name: "清风一凡", price: "198元", code: "qingfeng" },
+            { name: "明月禅尘", price: "218元", code: "mingyue" }
+        ],
+        ys: [    // 养生沐足
+            { name: "玉指兰香", price: "138元", code: "yuzhi" },
+            { name: "竹影寒纱", price: "168元", code: "zhuying" }
+        ]
+    };
+
+    // ------------------------------
+    // 2. 技师数据 (按套餐code存放)
+    // 每个技师: id(工号), name, avatar(头像链接), desc(简介), gallery(相册图片链接数组)
+    // 注意: 请替换成你门店的真实照片链接 (可用免费图床上传)
+    // ------------------------------
+    const staffDatabase = {
+        // K歌沐足 - 貂蝉拜月
+        diaochan: [
+            { id: "92号", name: "哈哈", avatar: "https://i.postimg.cc/R0yzN420/92hao.png", desc: "嗓音甜美，情歌对唱，沐足手法温柔", gallery: ["https://i.postimg.cc/R0yzN420/92hao.png"] },
+            { id: "102号", name: "雪怡", avatar: "https://i.postimg.cc/3Nr9hD92/102.jpg", desc: "嗓音甜美，情歌对唱，沐足手法温柔", gallery: ["https://i.postimg.cc/3Nr9hD92/102.jpg"] },
+            { id: "212号", name: "静瑶", avatar: "https://i.postimg.cc/B64B51rd/212.jpg", desc: "嗓音甜美，情歌对唱，沐足手法温柔", gallery: ["https://i.postimg.cc/B64B51rd/212.jpg"] },
+            { id: "232号", name: "秋秋", avatar: "https://i.postimg.cc/hj2T9Zbp/232.jpg", desc: "嗓音甜美，情歌对唱，沐足手法温柔", gallery: ["https://i.postimg.cc/hj2T9Zbp/232.jpg"] },
+            { id: "332号", name: "妮妮", avatar: "https://i.postimg.cc/tCxnT4fh/332.jpg", desc: "嗓音甜美，情歌对唱，沐足手法温柔", gallery: ["https://i.postimg.cc/tCxnT4fh/332.jpg"] },
+            { id: "502号", name: "紫萱", avatar: "https://i.postimg.cc/yd33Z6dr/502.jpg", desc: "嗓音甜美，情歌对唱，沐足手法温柔", gallery: ["https://i.postimg.cc/yd33Z6dr/502.jpg"] },
+            { id: "102", name: "紫萱", avatar: "https://picsum.photos/id/65/400/400", desc: "麦霸型，气氛担当，擅长肩颈放松", gallery: ["https://picsum.photos/id/28/800/600"] }
+            
+            
+        ],
+        // K歌沐足 - 贵妃醉酒
+        guifei: [
+            { id: "222号", name: "清清", avatar: "https://i.postimg.cc/W4j58Kg2/222.png", desc: "古典气质，戏曲唱腔，沐足与艺术结合", gallery: ["https://i.postimg.cc/W4j58Kg2/222.png"] },
+            { id: "335号", name: "语嫣", avatar: "https://i.postimg.cc/QMxyswtf/335.jpg", desc: "热情大方，互动感强，好评满满", gallery: ["https://i.postimg.cc/QMxyswtf/335.jpg"] }
+        ],
+        // 按摩SPA - 清风一凡
+        qingfeng: [
+            { id: "106号", name: "思琪", avatar: "https://i.postimg.cc/kXvs4sLY/106.jpg", desc: "精油开背，经络疏通，好评率98%", gallery: ["https://i.postimg.cc/kXvs4sLY/106.jpg"] },
+            { id: "16号", name: "婉清", avatar: "https://i.postimg.cc/6p78S5VH/16.png", desc: "泰式拉伸，缓解疲劳，专业理疗", gallery: ["https://i.postimg.cc/6p78S5VH/16.png"] }
+        ],
+        // 按摩SPA - 明月禅尘
+        mingyue: [
+            { id: "66号", name: "若溪", avatar: "https://i.postimg.cc/RZfMK3QD/66.jpg", desc: "香薰SPA，情绪舒缓，沉浸体验", gallery: ["https://i.postimg.cc/RZfMK3QD/66.jpg"]},
+            { id: "96号", name: "诗涵", avatar: "https://i.postimg.cc/ht9Bhkc5/96.png", desc: "古法按摩，穴位精准", gallery: ["https://i.postimg.cc/ht9Bhkc5/96.png"] }
+        ],
+        // 养生沐足 - 玉指兰香
+        yuzhi: [
+            { id: "301", name: "丽华", avatar: "https://picsum.photos/id/29/400/400", desc: "十年足疗经验，助眠安神", gallery: ["https://picsum.photos/id/34/800/600"] },
+            { id: "302", name: "美琳", avatar: "https://picsum.photos/id/44/400/400", desc: "亲和力满分，腿部舒缓专家", gallery: ["https://picsum.photos/id/42/800/600"] }
+        ],
+        // 养生沐足 - 竹影寒纱
+        zhuying: [
+            { id: "303", name: "雪怡", avatar: "https://picsum.photos/id/76/400/400", desc: "柔中带刚，穴位刺激", gallery: ["https://picsum.photos/id/77/800/600","https://picsum.photos/id/78/800/600"] },
+            { id: "304", name: "静瑶", avatar: "https://picsum.photos/id/79/400/400", desc: "擅长足底反射区调理", gallery: ["https://picsum.photos/id/80/800/600"] }
+        ]
+    };
+
+    // ------------------------------
+    // 状态管理
+    let currentProject = "kge";          // 当前选中的项目
+    let currentPackageCode = "diaochan"; // 当前选中的套餐code (默认第一个项目的第一个套餐)
+    let currentGalleryImages = [];
+    let currentGalleryIndex = 0;
+    let currentStaffName = "";
+
+    // DOM 元素
+    const projectBtns = document.querySelectorAll(".project-btn");
+    const packageContainer = document.getElementById("packageButtons");
+    const staffGrid = document.getElementById("staffGrid");
+    const lightboxEl = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightboxImg");
+    const lightboxCaption = document.getElementById("lightboxCaption");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const closeLightbox = document.querySelector(".close-lightbox");
+
+    // 辅助: 获取当前项目的套餐列表
+    function getCurrentPackages() {
+        return packages[currentProject] || packages.kge;
+    }
+
+    // 渲染套餐按钮
+    function renderPackageButtons() {
+        const pkgList = getCurrentPackages();
+        if (!pkgList.length) return;
+        // 检查当前套餐code是否在当前项目下有效，无效则重置为第一个
+        const validCodes = pkgList.map(p => p.code);
+        if (!validCodes.includes(currentPackageCode)) {
+            currentPackageCode = pkgList[0].code;
+        }
+        const html = pkgList.map(pkg => `
+            <button class="package-btn ${currentPackageCode === pkg.code ? 'active' : ''}" data-code="${pkg.code}">
+                ${pkg.name}  <span class="package-price">${pkg.price}</span>
+            </button>
+        `).join('');
+        packageContainer.innerHTML = html;
+        // 绑定点击事件
+        document.querySelectorAll(".package-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const code = btn.getAttribute("data-code");
+                if (code) {
+                    currentPackageCode = code;
+                    renderPackageButtons();   // 刷新按钮高亮
+                    renderStaffList();         // 刷新技师
+                }
+            });
+        });
+    }
+
+    // 渲染技师列表 (根据 currentPackageCode)
+    function renderStaffList() {
+        const staffList = staffDatabase[currentPackageCode] || [];
+        if (staffList.length === 0) {
+            staffGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; background:#fff9f2; border-radius:40px;">✨ 暂无该套餐技师，敬请期待～</div>`;
+            return;
+        }
+        const cardsHtml = staffList.map(staff => `
+            <div class="card" data-id="${staff.id}">
+                <img class="card-img" src="${staff.avatar}" alt="${staff.name}" loading="lazy" onerror="this.src='https://picsum.photos/id/1/400/400'">
+                <div class="card-info">
+                    <div class="staff-id">工号 ${staff.id}</div>
+                    <div class="staff-name">${staff.name}</div>
+                    <div class="staff-desc">${staff.desc || '用心服务，让您放松身心'}</div>
+                    <button class="btn-gallery" data-id="${staff.id}">📷 相册 (${staff.gallery.length}张)</button>
+                </div>
+            </div>
+        `).join('');
+        staffGrid.innerHTML = cardsHtml;
+        // 绑定相册按钮事件
+        document.querySelectorAll(".btn-gallery").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const staffId = btn.getAttribute("data-id");
+                const staff = staffList.find(s => s.id === staffId);
+                if (staff && staff.gallery && staff.gallery.length) {
+                    openLightbox(staff.gallery, staff.name);
+                } else {
+                    alert("暂无相册照片");
+                }
+            });
+        });
+    }
+
+    // 切换项目时重置套餐并刷新
+    function switchProject(projectId) {
+        currentProject = projectId;
+        // 重置套餐为当前项目的第一个套餐
+        const firstPkg = getCurrentPackages()[0];
+        if (firstPkg) {
+            currentPackageCode = firstPkg.code;
+        }
+        // 更新项目按钮样式
+        projectBtns.forEach(btn => {
+            if (btn.getAttribute("data-project") === projectId) {
+                btn.classList.add("active");
+            } else {
+                btn.classList.remove("active");
+            }
+        });
+        renderPackageButtons();
+        renderStaffList();
+    }
+
+    // 相册逻辑
+    function openLightbox(images, staffName) {
+        if (!images || images.length === 0) return;
+        currentGalleryImages = images;
+        currentGalleryIndex = 0;
+        currentStaffName = staffName;
+        updateLightboxImage();
+        lightboxEl.classList.add("active");
+    }
+    function updateLightboxImage() {
+        if (currentGalleryImages.length > 0) {
+            lightboxImg.src = currentGalleryImages[currentGalleryIndex];
+            lightboxCaption.innerText = `${currentStaffName} · ${currentGalleryIndex+1}/${currentGalleryImages.length}`;
+        }
+    }
+    function nextImage() {
+        if (currentGalleryImages.length === 0) return;
+        currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
+        updateLightboxImage();
+    }
+    function prevImage() {
+        if (currentGalleryImages.length === 0) return;
+        currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+        updateLightboxImage();
+    }
+    function closeLightboxFunc() {
+        lightboxEl.classList.remove("active");
+    }
+
+    // 绑定项目切换事件
+    function bindProjectEvents() {
+        projectBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const project = btn.getAttribute("data-project");
+                if (project && project !== currentProject) {
+                    switchProject(project);
+                }
+            });
+        });
+    }
+
+    // 弹窗事件绑定
+    function bindLightboxEvents() {
+        closeLightbox.addEventListener("click", closeLightboxFunc);
+        nextBtn.addEventListener("click", nextImage);
+        prevBtn.addEventListener("click", prevImage);
+        lightboxEl.addEventListener("click", (e) => {
+            if (e.target === lightboxEl) closeLightboxFunc();
+        });
+    }
+
+    // 初始化
+    function init() {
+        bindProjectEvents();
+        bindLightboxEvents();
+        switchProject("kge");  // 默认选中K歌沐足
+    }
+
+    init();
+</script>
+</body>
+</html>
